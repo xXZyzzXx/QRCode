@@ -1,19 +1,18 @@
-from kivy.uix.boxlayout import BoxLayout
-from kivy.lang import Builder
-from kivymd.app import MDApp
+from kivy.properties import StringProperty, ListProperty
+from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import ScreenManager, Screen, WipeTransition
-from kivymd.app import MDApp
 from kivy.uix.scrollview import ScrollView
+from kivymd.app import MDApp
 from kivymd.uix.navigationdrawer import MDNavigationDrawer, MDNavigationLayout
 from kivymd.uix.toolbar import MDToolbar
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import OneLineIconListItem, MDList, IconLeftWidget
 from kivymd.theming import ThemableBehavior
-from kivy.properties import StringProperty, ListProperty
-from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.image import Image
+from kivy_garden.zbarcam import ZBarCam
+
 
 sm = ScreenManager(transition=WipeTransition())
 
@@ -113,6 +112,7 @@ class SecondScreen(Screen):
         toolbar.right_action_items = [["dots-vertical", lambda x: self.nav_drawer.set_state('toggle')]]
         root.add_widget(toolbar)
         root.add_widget(Widget())
+        root.add_widget(ZBarCam())
         self.add_widget(root)
 
 
