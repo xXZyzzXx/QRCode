@@ -1,7 +1,9 @@
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 from kivy.uix.widget import Widget
+from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, WipeTransition
-from kivymd.uix.toolbar import MDToolbar
 from kivy_garden.zbarcam import ZBarCam
 
 screen_manager = ScreenManager(transition=NoTransition())
@@ -14,33 +16,72 @@ class Screens:
     ASSIGN_QR = "Assign QR code"
     READ_QR = "Read QR code"
     MISSING_DEVICES = "Missing devices"
+    MENU = "Menu"
+
+    SCREENS = [REGISTER, CALENDAR, ASSIGN_QR, READ_QR, MISSING_DEVICES]
+
+
+class MenuButton(Button):
+    def __init__(self, screen_name: str, **kwargs):
+        super().__init__(**kwargs)
+        self.text = screen_name
+
+    def on_release(self):
+        screen_manager.current = self.text
+
+
+class BackButton(Button):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def on_release(self):
+        screen_manager.current = Screens.MENU
 
 
 class CustomScreen(Screen):
-    def __init__(self, nav_drawer, **kw):
+    def __init__(self, **kw):
         super().__init__(**kw)
-        self.nav_drawer = nav_drawer
 
-    def on_pre_enter(self):
-        self.nav_drawer.set_state('close')
+    @staticmethod
+    def get_back_btn():
+        root = AnchorLayout(anchor_x="center", anchor_y="center")
+        footer = BoxLayout(orientation='vertical', size_hint_y=0.2)
+        footer.add_widget(BackButton(text="Back to main menu"))
+        root.add_widget(footer)
+        return root
+
+
+class MenuScreen(CustomScreen):
+    def on_enter(self, *args):
+        root = BoxLayout(orientation='vertical')
+        body = AnchorLayout(anchor_x="center", anchor_y="center")
+        menu_buttons = BoxLayout(orientation='vertical', size_hint_y=0.5, size_hint_x=0.5)
+        for screen_name in Screens.SCREENS:
+            menu_buttons.add_widget(MenuButton(screen_name=screen_name))
+        body.add_widget(menu_buttons)
+        root.add_widget(body)
+        self.add_widget(root)
 
 
 class RegisterScreen(CustomScreen):
     def on_enter(self, *args):
         root = BoxLayout(orientation='vertical')
-        toolbar = MDToolbar(title=Screens.REGISTER)
-        toolbar.right_action_items = [["dots-vertical", lambda x: self.nav_drawer.set_state('toggle')]]
-        root.add_widget(toolbar)
-        root.add_widget(Widget())
+        body = BoxLayout(orientation='vertical', size_hint_y=0.8)
+        footer = self.get_back_btn()
+        root.add_widget(body)
+        root.add_widget(footer)
         self.add_widget(root)
 
 
 class CalendarScreen(CustomScreen):
     def on_enter(self, *args):
         root = BoxLayout(orientation='vertical')
-        toolbar = MDToolbar(title=Screens.CALENDAR)
-        toolbar.right_action_items = [["dots-vertical", lambda x: self.nav_drawer.set_state('toggle')]]
-        root.add_widget(toolbar)
+        header = BoxLayout(orientation='vertical', size_hint_y=None, height=40)
+        header.add_widget(Label(text=Screens.CALENDAR))
+        body = BoxLayout(orientation='vertical')
+        # body.add_widget(Calender())
+        root.add_widget(header)
+        root.add_widget(body)
         root.add_widget(Widget())
         self.add_widget(root)
 
@@ -48,9 +89,6 @@ class CalendarScreen(CustomScreen):
 class AssignQRCodeScreen(CustomScreen):
     def on_enter(self, *args):
         root = BoxLayout(orientation='vertical')
-        toolbar = MDToolbar(title=Screens.ASSIGN_QR)
-        toolbar.right_action_items = [["dots-vertical", lambda x: self.nav_drawer.set_state('toggle')]]
-        root.add_widget(toolbar)
         root.add_widget(Widget())
         # Adding QRCode scanner to layout
         """
@@ -65,9 +103,6 @@ class AssignQRCodeScreen(CustomScreen):
 class ReadQRCodeScreen(CustomScreen):
     def on_enter(self, *args):
         root = BoxLayout(orientation='vertical')
-        toolbar = MDToolbar(title=Screens.READ_QR)
-        toolbar.right_action_items = [["dots-vertical", lambda x: self.nav_drawer.set_state('toggle')]]
-        root.add_widget(toolbar)
         root.add_widget(Widget())
         self.add_widget(root)
 
@@ -75,8 +110,5 @@ class ReadQRCodeScreen(CustomScreen):
 class MissingDevicesScreen(CustomScreen):
     def on_enter(self, *args):
         root = BoxLayout(orientation='vertical')
-        toolbar = MDToolbar(title=Screens.MISSING_DEVICES)
-        toolbar.right_action_items = [["dots-vertical", lambda x: self.nav_drawer.set_state('toggle')]]
-        root.add_widget(toolbar)
         root.add_widget(Widget())
         self.add_widget(root)

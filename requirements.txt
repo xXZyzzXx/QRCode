@@ -3,11 +3,9 @@ charset-normalizer==2.0.8
 docutils==0.18.1
 idna==3.3
 Kivy==2.0.0
-Kivy-examples==2.0.0
 Kivy-Garden==0.1.4
 kivy-garden.xcamera==2020.613
 kivy-garden.zbarcam==2020.524
-kivymd==0.104.2
 numpy==1.21.4
 opencv-python==4.5.4.60
 Pillow==8.4.0
