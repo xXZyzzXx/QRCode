@@ -1,7 +1,5 @@
 from kivy.app import App
 
-# from app.custom_widgets import ContentNavigationDrawer
-
 from app.screens import (
     RegisterScreen, CalendarScreen, AssignQRCodeScreen, ReadQRCodeScreen,
     MissingDevicesScreen, MenuScreen, Screens, screen_manager
