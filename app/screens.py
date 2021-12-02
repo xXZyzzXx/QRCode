@@ -4,6 +4,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy_garden.zbarcam import ZBarCam
+from KivyCalendar import CalendarWidget
 
 from app.utils import Screens, build_screen
 from app.custom_widgets import MenuButton, RegisterNewPupilButton, OutlinedLabel, CustomTextInput
