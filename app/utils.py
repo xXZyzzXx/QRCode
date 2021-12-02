@@ -1,3 +1,5 @@
+import os
+
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.button import Button
@@ -70,4 +72,6 @@ def build_screen(screen_name: str, body: BoxLayout) -> BoxLayout:
     return root
 
 
-
+def create_database_folder() -> None:
+    if not os.path.exists("db"):
+        os.makedirs("db")

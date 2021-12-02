@@ -4,7 +4,10 @@ from json.decoder import JSONDecodeError
 
 from kivy.storage.jsonstore import JsonStore
 
+from app.utils import create_database_folder
 
+
+create_database_folder()
 pupils_store = JsonStore('db/pupils_db.json')
 
 

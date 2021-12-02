@@ -76,7 +76,6 @@ class RegisterNewPupilButton(Button):
     def show_fail_message(self, missed_fields: list = None, extra_message: str = None) -> None:
         self.notification_label.color = (1, 0, 0)
         fail_message = f"You need to fill this fields: {', '.join([*missed_fields])}"
-        print(f"Missed fields: {missed_fields}")
         if extra_message:
             fail_message = extra_message
         self.notification_label.text = fail_message

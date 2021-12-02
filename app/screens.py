@@ -3,7 +3,6 @@ from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
 from kivy_garden.zbarcam import ZBarCam
 
 from app.utils import Screens, build_screen
