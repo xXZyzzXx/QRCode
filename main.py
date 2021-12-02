@@ -1,10 +1,14 @@
 from kivy.app import App
+from kivy.core.window import Window
 
 from app.screens import (
     RegisterScreen, CalendarScreen, AssignQRCodeScreen, ReadQRCodeScreen,
     MissingDevicesScreen, MenuScreen, Screens
 )
-from app.utils import screen_manager
+from app.utils import screen_manager, get_screen_dimensions
+
+
+Window.size = get_screen_dimensions(debug=True)
 
 
 class MainApp(App):
@@ -12,6 +16,7 @@ class MainApp(App):
     Main app for building GUI
     """
     def build(self):
+        self.title = "QRCode management app"
         screen_manager.add_widget(MenuScreen(name=Screens.MENU))
         screen_manager.add_widget(RegisterScreen(name=Screens.REGISTER))
         screen_manager.add_widget(CalendarScreen(name=Screens.CALENDAR))

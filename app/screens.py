@@ -11,7 +11,7 @@ class MenuScreen(Screen):
     def on_enter(self, *args):
         root = BoxLayout(orientation='vertical')
         body = AnchorLayout(anchor_x="center", anchor_y="center")
-        menu_buttons = BoxLayout(orientation='vertical', size_hint_y=0.5, size_hint_x=0.5)
+        menu_buttons = BoxLayout(orientation='vertical', size_hint_y=0.5, size_hint_x=0.7)
         for screen_name in Screens.SCREENS:
             menu_buttons.add_widget(MenuButton(screen_name=screen_name))
         body.add_widget(menu_buttons)

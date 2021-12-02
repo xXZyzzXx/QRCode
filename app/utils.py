@@ -7,9 +7,24 @@ from kivy.uix.screenmanager import ScreenManager, NoTransition
 
 screen_manager = ScreenManager(transition=NoTransition())
 
+DEFAULT_WIDTH = 640
+DEFAULT_HEIGHT = 1136
+
+
+def get_screen_dimensions(debug: bool = False) -> tuple:
+    """
+    Returns current dimensions
+    """
+    scale_modifier = 1.5
+    if not debug:
+        return DEFAULT_WIDTH, DEFAULT_HEIGHT
+    return DEFAULT_WIDTH / scale_modifier, DEFAULT_HEIGHT / scale_modifier
+
 
 class Screens:
-    """Screen names"""
+    """
+    Provide screen names
+    """
     REGISTER = "Register"
     CALENDAR = "Calendar"
     ASSIGN_QR = "Assign QR code"
