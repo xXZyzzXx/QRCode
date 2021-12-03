@@ -81,41 +81,4 @@ class RegisterNewPupilButton(Button):
         self.notification_label.text = ""
 
 
-class AssignQRCodeButton(Button):
-    def __init__(self, pupil_data: dict, screen: Screen, **kwargs):
-        super().__init__(**kwargs)
-        self.pupil_data = pupil_data
-        self.pupil_name = pupil_data.get("name")
-        self.pupil_first_name = pupil_data.get("first_name")
-        self.pupil_phone_number = pupil_data.get("phone_number")
-        self.parent_screen = screen
-        self.text = f"{self.pupil_name}, {self.pupil_first_name}, {self.pupil_phone_number}"
-        self.popup = None
 
-    def on_release(self):
-        self.show_assign_qr_popup()
-
-    def show_assign_qr_popup(self):
-        self.popup = Popup(title=f"Do you want to assign QR code to {self.pupil_name}?", size_hint=(.8, .4))
-        box_lay = BoxLayout(orientation="vertical")
-        pupils_data_lay = BoxLayout(orientation="vertical", size_hint_y=.7)
-        choice_lay = BoxLayout(orientation="horizontal", size_hint_y=.3)
-        for key in self.pupil_data:
-            value = self.pupil_data[key]
-            pupils_data_lay.add_widget(Label(text=f"{key} - {value}"))
-
-        accept_button = Button(text="Accept")
-        decline_button = Button(text="Decline")
-        accept_button.bind(on_release=lambda _: self.set_assign_choice(accept=True))
-        decline_button.bind(on_release=lambda _: self.set_assign_choice(accept=False))
-        choice_lay.add_widget(accept_button)
-        choice_lay.add_widget(decline_button)
-
-        box_lay.add_widget(pupils_data_lay)
-        box_lay.add_widget(choice_lay)
-        self.popup.add_widget(box_lay)
-        self.popup.open()
-
-    def set_assign_choice(self, accept: bool = False):
-        self.parent_screen.set_assign_choice(accept=accept)
-        self.popup.dismiss()

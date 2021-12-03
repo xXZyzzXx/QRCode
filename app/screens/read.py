@@ -7,7 +7,7 @@ from app.utils import build_screen
 class ReadQRCodeScreen(Screen):
     def on_enter(self, *args):
         body = BoxLayout()
-        # Custom logic
+        # TODO: Custom logic, just in progress
         """
         try:
             root.add_widget(ZBarCam())

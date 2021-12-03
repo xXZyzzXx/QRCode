@@ -1,4 +1,5 @@
 import os
+from typing import Union
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
@@ -64,7 +65,7 @@ def get_footer() -> AnchorLayout:
     return footer
 
 
-def build_screen(screen_name: str, body: BoxLayout) -> BoxLayout:
+def build_screen(screen_name: str, body: Union[BoxLayout, AnchorLayout]) -> BoxLayout:
     root = BoxLayout(orientation='vertical')
     root.add_widget(get_header(screen_name=screen_name))
     root.add_widget(body)

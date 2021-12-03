@@ -7,6 +7,6 @@ from app.utils import build_screen
 class MissingDevicesScreen(Screen):
     def on_enter(self, *args):
         body = BoxLayout()
-        # Custom logic
+        # TODO: Custom logic, just in progress
         root = build_screen(screen_name=self.name, body=body)
         self.add_widget(root)

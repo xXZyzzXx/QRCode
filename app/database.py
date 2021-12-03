@@ -6,7 +6,6 @@ from kivy.storage.jsonstore import JsonStore
 
 from app.utils import create_database_folder
 
-
 create_database_folder()
 pupils_store = JsonStore('db/pupils_db.json')
 qr_store = JsonStore('db/qr_db.json')
@@ -20,6 +19,7 @@ def create_new_pupil(name: str, first_name: str, phone_number: str) -> bool:
             "name": name,
             "first_name": first_name,
             "phone_number": phone_number,
+            "qr_code": None,
         }
         pupils_store.put(
             name,
@@ -31,12 +31,26 @@ def create_new_pupil(name: str, first_name: str, phone_number: str) -> bool:
         return False
 
 
+def add_qr_code_data_to_pupil_by_name(pupil_name: str, qr_code_data: str) -> bool:
+    print(f"Saving qr data: {pupil_name}, {qr_code_data}")
+    try:
+        pupil_data = get_pupil_data_by_name(pupil_name)
+        if pupil_data:
+            pupil_data["qr_code"] = qr_code_data
+            pupils_store.put(pupil_name, **pupil_data)
+            return True
+        return False
+    except Exception as e:
+        print(f"Add qr code to pupil with name {pupil_name} error: {e}")
+        return False
+
+
 def get_pupil_data_by_name(pupil_name: str) -> Optional[dict]:
     try:
         pupil_data = None
         find_result: Generator = pupils_store.find(name=pupil_name)
         for item in find_result:
-            # item is a tuple of key and value
+            # Hint: item is a tuple of key and value
             if item:
                 pupil_data = item[1]
                 break

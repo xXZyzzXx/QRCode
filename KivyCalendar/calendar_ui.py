@@ -1,3 +1,5 @@
+import datetime
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
@@ -202,11 +204,13 @@ class CalendarWidget(RelativeLayout):
                                             self.active_date[1])
 
     def get_btn_value(self, inst):
-        print(f"Get btn value: {inst.text}")
         """ Get day value from pressed button """
-
         self.active_date[0] = int(inst.text)
-        print(self.active_date)
+        current_date = datetime.datetime.strptime(
+            '-'.join([str(i) for i in self.active_date]),
+            "%d-%m-%Y"
+        )
+        print(f"You picked the date: {self.active_date} -> {current_date.strftime('%d %B %Y')}")
 
         if self.as_popup:
             self.parent_popup.dismiss()

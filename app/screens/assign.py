@@ -1,15 +1,15 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.screenmanager import Screen, ScreenManager, NoTransition
 from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy_garden.zbarcam import ZBarCam
 
 from app.utils import build_screen
-from app.custom_widgets import AssignQRCodeButton
-from app.database import get_all_pupils
+from app.database import get_all_pupils, add_qr_code_data_to_pupil_by_name
 
 
 class AssignScreenNames:
@@ -20,11 +20,11 @@ class AssignScreenNames:
     SCREENS = [START, READ, ASSIGN]
 
 
+# Basic screen
 class AssignQRCodeScreen(Screen):
     """
     Root screen to manage assign logic
     """
-
     def __init__(self, **kw):
         super().__init__(**kw)
         self.assign_qr_manager = AssignScreenManager()
@@ -43,22 +43,38 @@ class AssignQRCodeScreen(Screen):
 
     def on_enter(self, *args):
         self.assign_qr_manager.qr_code_data = None
+        self.assign_qr_manager.set_default_screen()
 
 
+# Additional widgets
 class AssignScreenManager(ScreenManager):
+    """
+    Custom screen manager for navigation between assign menu
+    """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.transition = NoTransition()
         self.qr_code_data = None
 
     def change_screen_to_assign(self, qr_code_data: dict) -> None:
         self.qr_code_data = qr_code_data
         self.change_to_screen(screen_name=AssignScreenNames.ASSIGN)
 
+    def set_default_screen(self) -> None:
+        if self.current != AssignScreenNames.START:
+            self.change_to_screen(screen_name=AssignScreenNames.START)
+
     def change_to_screen(self, screen_name: str) -> None:
         self.current = screen_name
 
 
+# Assign screens
 class StartScreen(Screen):
+    """
+    Default menu to start assign QR or get back
+    """
+
     def __init__(self, **kw):
         super().__init__(**kw)
 
@@ -76,6 +92,10 @@ class StartScreen(Screen):
 
 
 class ReadQRScreen(Screen):
+    """
+    Reading QR data and pass to next screen
+    """
+
     def __init__(self, **kw):
         super().__init__(**kw)
 
@@ -89,6 +109,10 @@ class ReadQRScreen(Screen):
 
 
 class AssignToPupilScreen(Screen):
+    """
+    Chooses which pupils to assign a QR code
+    """
+
     def __init__(self, **kw):
         super().__init__(**kw)
         self.qr_code_data = None
@@ -116,9 +140,51 @@ class AssignToPupilScreen(Screen):
         root.add_widget(box_lay)
         return root
 
-    def set_assign_choice(self, accept: bool = False) -> None:
+    def set_assign_choice(self, pupil_name: str, accept: bool = False) -> None:
         if accept:
-            print(f"Accept")
-            self.manager.change_to_screen(screen_name=AssignScreenNames.START)
-        else:
-            print("Decline")
+            qr_code = self.qr_code_data.get("qr_code")
+            add_qr_code_data_to_pupil_by_name(qr_code_data=qr_code, pupil_name=pupil_name)
+            self.manager.set_default_screen()
+
+
+# Custom widgets
+class AssignQRCodeButton(Button):
+    def __init__(self, pupil_data: dict, screen: Screen, **kwargs):
+        super().__init__(**kwargs)
+        self.pupil_data = pupil_data
+        self.pupil_name = pupil_data.get("name")
+        self.pupil_first_name = pupil_data.get("first_name")
+        self.pupil_phone_number = pupil_data.get("phone_number")
+        self.parent_screen = screen
+        self.text = f"{self.pupil_name}, {self.pupil_first_name}, {self.pupil_phone_number}"
+        self.popup = None
+
+    def on_release(self):
+        self.show_assign_qr_popup()
+
+    def show_assign_qr_popup(self):
+        self.popup = Popup(title=f"Do you want to assign QR code to {self.pupil_name}?", size_hint=(.8, .4))
+        box_lay = BoxLayout(orientation="vertical")
+        pupils_data_lay = BoxLayout(orientation="vertical", size_hint_y=.7)
+        choice_lay = BoxLayout(orientation="horizontal", size_hint_y=.3)
+        for key in self.pupil_data:
+            if key == "qr_code":  # Skip unnecessary data
+                continue
+            value = self.pupil_data[key]
+            pupils_data_lay.add_widget(Label(text=f"{key} - {value}"))
+
+        accept_button = Button(text="Accept")
+        decline_button = Button(text="Decline")
+        accept_button.bind(on_release=lambda _: self.set_assign_choice(accept=True))
+        decline_button.bind(on_release=lambda _: self.set_assign_choice(accept=False))
+        choice_lay.add_widget(accept_button)
+        choice_lay.add_widget(decline_button)
+
+        box_lay.add_widget(pupils_data_lay)
+        box_lay.add_widget(choice_lay)
+        self.popup.add_widget(box_lay)
+        self.popup.open()
+
+    def set_assign_choice(self, accept: bool = False):
+        self.parent_screen.set_assign_choice(accept=accept, pupil_name=self.pupil_name)
+        self.popup.dismiss()
