@@ -3,26 +3,13 @@ from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
-from kivy_garden.zbarcam import ZBarCam
-from KivyCalendar import CalendarWidget
 
-from app.utils import Screens, build_screen
-from app.custom_widgets import MenuButton, RegisterNewPupilButton, OutlinedLabel, CustomTextInput
-
-
-class MenuScreen(Screen):
-    def on_enter(self, *args):
-        root = BoxLayout(orientation='vertical')
-        body = AnchorLayout(anchor_x="center", anchor_y="center")
-        menu_buttons = BoxLayout(orientation='vertical', size_hint_y=0.5, size_hint_x=0.7)
-        for screen_name in Screens.SCREENS:
-            menu_buttons.add_widget(MenuButton(screen_name=screen_name))
-        body.add_widget(menu_buttons)
-        root.add_widget(body)
-        self.add_widget(root)
+from app.utils import build_screen
+from app.custom_widgets import (
+    RegisterNewPupilButton, CustomTextInput
+)
 
 
-# Screens
 class RegisterScreen(Screen):
     """
     Screen to register new pupils
@@ -40,11 +27,11 @@ class RegisterScreen(Screen):
         root = build_screen(screen_name=self.name, body=body)
         self.add_widget(root)
 
-    def build_register_menu(self):
+    def build_register_menu(self) -> AnchorLayout:
         root = AnchorLayout(anchor_x="center", anchor_y="top")
 
         notifications_lay = BoxLayout(orientation="vertical", height=50)
-        notification_label = OutlinedLabel()
+        notification_label = Label()
         notifications_lay.add_widget(notification_label)  # Button(text="notifications")
 
         box_lay = BoxLayout(orientation="vertical", size_hint=(0.7, 0.8), padding=(0, 0, 0, 50))
@@ -66,41 +53,3 @@ class RegisterScreen(Screen):
         box_lay.add_widget(RegisterNewPupilButton(text_inputs=self.text_input_lines, nl=notification_label))
         root.add_widget(box_lay)
         return root
-
-
-class CalendarScreen(Screen):
-    def on_enter(self, *args):
-        body = BoxLayout()
-        # Custom logic
-        root = build_screen(screen_name=self.name, body=body)
-        self.add_widget(root)
-
-
-class AssignQRCodeScreen(Screen):
-    def on_enter(self, *args):
-        body = BoxLayout()
-        # Custom logic
-        root = build_screen(screen_name=self.name, body=body)
-        self.add_widget(root)
-
-
-class ReadQRCodeScreen(Screen):
-    def on_enter(self, *args):
-        body = BoxLayout()
-        # Custom logic
-        """
-        try:
-            root.add_widget(ZBarCam())
-        except Exception as e:
-            print(f"Add ZBarCam widget error")
-        """
-        root = build_screen(screen_name=self.name, body=body)
-        self.add_widget(root)
-
-
-class MissingDevicesScreen(Screen):
-    def on_enter(self, *args):
-        body = BoxLayout()
-        # Custom logic
-        root = build_screen(screen_name=self.name, body=body)
-        self.add_widget(root)
