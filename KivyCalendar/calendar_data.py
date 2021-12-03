@@ -1,18 +1,19 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-###########################################################
-# KivyCalendar (X11/MIT License)
-# Calendar & Date picker widgets for Kivy (http://kivy.org)
-# https://bitbucket.org/xxblx/kivycalendar
-# 
-# Oleg Kozlov (xxblx), 2015
-# https://xxblx.bitbucket.org/
-###########################################################
-
-from calendar import TimeEncoding, month_name, day_abbr, Calendar, monthrange
+from calendar import month_name, day_abbr, Calendar, monthrange
 from datetime import datetime
 from locale import getdefaultlocale
+import locale as _locale
+
+
+class TimeEncoding:
+    def __init__(self, locale):
+        self.locale = locale
+
+    def __enter__(self):
+        self.oldlocale = _locale.setlocale(_locale.LC_TIME, self.locale)
+        return _locale.getlocale(_locale.LC_TIME)[1]
+
+    def __exit__(self, *args):
+        _locale.setlocale(_locale.LC_TIME, self.oldlocale)
 
 
 def get_month_names():
