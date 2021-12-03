@@ -9,11 +9,12 @@ from app.utils import create_database_folder
 
 create_database_folder()
 pupils_store = JsonStore('db/pupils_db.json')
+qr_store = JsonStore('db/qr_db.json')
 
 
 def create_new_pupil(name: str, first_name: str, phone_number: str) -> bool:
     try:
-        pupil_id = str(uuid4())
+        pupil_id = str(uuid4().int)[:12]
         pupil_data = {
             "pupil_id": pupil_id,
             "name": name,
