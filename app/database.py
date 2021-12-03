@@ -1,4 +1,5 @@
 from uuid import uuid4
+from datetime import datetime
 from typing import Optional, Generator
 from json.decoder import JSONDecodeError
 
@@ -6,11 +7,14 @@ from kivy.storage.jsonstore import JsonStore
 
 from app.utils import create_database_folder
 
+
 create_database_folder()
+
 pupils_store = JsonStore('db/pupils_db.json')
-qr_store = JsonStore('db/qr_db.json')
+active_days_storage = JsonStore('db/active_days.json')
 
 
+# Pupil crud
 def create_new_pupil(name: str, first_name: str, phone_number: str) -> bool:
     try:
         pupil_id = str(uuid4().int)[:12]
@@ -66,3 +70,47 @@ def get_all_pupils() -> Optional[dict]:
         return all_pupils
     except Exception as e:
         print(f"Create new pupil error: {e}")
+
+
+# Active days crud
+def activate_day(date: datetime) -> bool:
+    try:
+        str_date = str(date.date())
+        active_days_storage.put(str_date, date=str_date, datetime=str(date))
+        print(f"You're successfully activate {date} day!")
+        return True
+    except Exception as e:
+        print(f"Error activate day: {e}")
+        return False
+
+
+def deactivate_day(date: datetime.date) -> bool:
+    try:
+        active_days_storage.delete(str(date))
+        print(f"You're successfully deactivate {date} day!")
+        return True
+    except Exception as e:
+        print(f"Error activate day: {e}")
+        return False
+
+
+def get_day_info_by_date(date: datetime.date) -> Optional[dict]:
+    try:
+        day_info = None
+        day_info_result: Generator = active_days_storage.find(date=str(date))
+        for item in day_info_result:
+            # Hint: item is a tuple of key and value
+            if item:
+                day_info = item[1]
+                break
+        return day_info
+    except Exception as e:
+        print(f"Get day info error: {e}")
+
+
+def get_activated_days() -> Optional[dict]:
+    try:
+        all_days = dict(active_days_storage)
+        return all_days
+    except Exception as e:
+        print(f"Get activated days error: {e}")

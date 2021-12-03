@@ -18,6 +18,9 @@ Window.size = get_screen_dimensions(debug=True)
 
 
 class MenuScreen(Screen):
+    """
+    Main menu screen with other sub-menus
+    """
     def on_enter(self, *args):
         root = BoxLayout(orientation='vertical')
         body = AnchorLayout(anchor_x="center", anchor_y="center")

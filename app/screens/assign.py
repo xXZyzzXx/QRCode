@@ -6,13 +6,16 @@ from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
-from kivy_garden.zbarcam import ZBarCam
+# from kivy_garden.zbarcam import ZBarCam
 
 from app.utils import build_screen
 from app.database import get_all_pupils, add_qr_code_data_to_pupil_by_name
 
 
 class AssignScreenNames:
+    """
+    Provide assign screen names
+    """
     START = "start_screen"
     READ = "read_qr"
     ASSIGN = "assign_qr"
@@ -23,7 +26,7 @@ class AssignScreenNames:
 # Basic screen
 class AssignQRCodeScreen(Screen):
     """
-    Root screen to manage assign logic
+    Root screen to manage assign logic with sub-menus
     """
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -51,7 +54,6 @@ class AssignScreenManager(ScreenManager):
     """
     Custom screen manager for navigation between assign menu
     """
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.transition = NoTransition()
@@ -74,7 +76,6 @@ class StartScreen(Screen):
     """
     Default menu to start assign QR or get back
     """
-
     def __init__(self, **kw):
         super().__init__(**kw)
 
@@ -95,7 +96,6 @@ class ReadQRScreen(Screen):
     """
     Reading QR data and pass to next screen
     """
-
     def __init__(self, **kw):
         super().__init__(**kw)
 
@@ -110,9 +110,8 @@ class ReadQRScreen(Screen):
 
 class AssignToPupilScreen(Screen):
     """
-    Chooses which pupils to assign a QR code
+    Choosing pupils to assign a QR code
     """
-
     def __init__(self, **kw):
         super().__init__(**kw)
         self.qr_code_data = None
@@ -149,6 +148,9 @@ class AssignToPupilScreen(Screen):
 
 # Custom widgets
 class AssignQRCodeButton(Button):
+    """
+    Custom button to open confirmation popup to assign qr data to pupil
+    """
     def __init__(self, pupil_data: dict, screen: Screen, **kwargs):
         super().__init__(**kwargs)
         self.pupil_data = pupil_data
@@ -168,7 +170,7 @@ class AssignQRCodeButton(Button):
         pupils_data_lay = BoxLayout(orientation="vertical", size_hint_y=.7)
         choice_lay = BoxLayout(orientation="horizontal", size_hint_y=.3)
         for key in self.pupil_data:
-            if key == "qr_code":  # Skip unnecessary data
+            if key == "qr_code":  # Skip unnecessary data to show
                 continue
             value = self.pupil_data[key]
             pupils_data_lay.add_widget(Label(text=f"{key} - {value}"))

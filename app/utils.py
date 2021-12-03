@@ -1,3 +1,4 @@
+import datetime
 import os
 from typing import Union
 
@@ -76,3 +77,12 @@ def build_screen(screen_name: str, body: Union[BoxLayout, AnchorLayout]) -> BoxL
 def create_database_folder() -> None:
     if not os.path.exists("db"):
         os.makedirs("db")
+
+
+# Datetime utils
+def convert_active_time_to_datetime(date_list: list) -> datetime.datetime:
+    current_datetime = datetime.datetime.strptime(
+        '-'.join([str(i) for i in date_list]),
+        "%d-%m-%Y"
+    )
+    return current_datetime
