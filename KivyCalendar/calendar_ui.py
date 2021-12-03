@@ -168,7 +168,7 @@ class CalendarWidget(RelativeLayout):
         current_date = current_datetime.date()
 
         day_activated_info = get_day_info_by_date(date=current_date)
-        print(f"day_info: {day_activated_info}")
+
         if not day_activated_info:
             box_lay = BoxLayout(orientation='vertical')
             time_picker = CircularTimePicker(as_popup=False, size_hint_y=.8)
@@ -176,7 +176,7 @@ class CalendarWidget(RelativeLayout):
 
             activate_btn = Button(text="Activate day", size_hint_y=.2)
             activate_btn.bind(
-                on_release=lambda _: self.activate_day(date=current_date, selected_time=time_picker.time)
+                on_release=lambda _: self.activate_day(date=current_date, selected_time=time_picker.time, btn=inst)
             )
             box_lay.add_widget(activate_btn)
             self.activate_popup = Popup(content=box_lay, size_hint=(.8, .6), title=f"This day is inactive: {date_now}")
@@ -184,23 +184,25 @@ class CalendarWidget(RelativeLayout):
             box_lay = BoxLayout(orientation='vertical')
             deactivate_btn = Button(text="Deactivate day")
             deactivate_btn.bind(
-                on_release=lambda _: self.deactivate_day(date=current_date)
+                on_release=lambda _: self.deactivate_day(date=current_date, btn=inst)
             )
             box_lay.add_widget(deactivate_btn)
             self.activate_popup = Popup(content=box_lay, size_hint=(.7, .2), title=f"This day is active!: {date_now}")
 
         self.activate_popup.open()
-        print(f"You picked the date: {self.active_date} -> {date_now}")
+
         if self.as_popup:
             self.parent_popup.dismiss()
 
-    def activate_day(self, date: datetime.date, selected_time: datetime.time) -> None:
+    def activate_day(self, date: datetime.date, selected_time: datetime.time, btn: Button) -> None:
         current_datetime = datetime.datetime.combine(date, selected_time)
-        activate_day(date=current_datetime)
+        if activate_day(date=current_datetime):
+            btn.background_color = (0, 1, 0, 1)
         self.activate_popup.dismiss()
 
-    def deactivate_day(self, date: datetime.date) -> None:
-        deactivate_day(date=date)
+    def deactivate_day(self, date: datetime.date, btn: Button) -> None:
+        if deactivate_day(date=date):
+            btn.background_color = (1, 1, 1, 1)
         self.activate_popup.dismiss()
 
     def go_prev(self, inst):
@@ -285,7 +287,7 @@ class DayNumButton(DayButton):
         super().__init__(**kwargs)
         self.active_date = active_date
         if self.active_date:
-            self.background_color = (0, 1, 0, .8)
+            self.background_color = (0, 1, 0, 1)
 
 
 class DayNumWeekendButton(DayButton):
