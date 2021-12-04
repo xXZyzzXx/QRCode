@@ -25,8 +25,8 @@ class ReadQRCodeScreen(Screen):
 
     def build_test_qr_code_screen(self) -> AnchorLayout:
         root = AnchorLayout(anchor_x="center", anchor_y="center")
-        box_lay = BoxLayout(orientation="vertical")
-        read_qr_btn = Button(text="Add QR code datetime record", size_hint=(.6, .25))
+        box_lay = BoxLayout(orientation="vertical", size_hint=(.6, .2))
+        read_qr_btn = Button(text="Add QR code datetime record", size_hint=(1, .5))
         read_qr_btn.bind(
             on_release=lambda _: self.test_get_qr_code_data()
         )

@@ -8,7 +8,6 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 
-
 screen_manager = ScreenManager(transition=NoTransition())
 
 DEFAULT_WIDTH = 640
@@ -19,7 +18,7 @@ def get_screen_dimensions(debug: bool = False) -> tuple:
     """
     Returns current dimensions
     """
-    scale_modifier = 1.5
+    scale_modifier = 2
     if not debug:
         return DEFAULT_WIDTH, DEFAULT_HEIGHT
     return DEFAULT_WIDTH / scale_modifier, DEFAULT_HEIGHT / scale_modifier
@@ -86,3 +85,16 @@ def convert_active_time_to_datetime(date_list: list) -> datetime.datetime:
         "%d-%m-%Y"
     )
     return current_datetime
+
+
+def format_timedelta(delta: datetime.timedelta) -> str:
+    total_seconds = delta.total_seconds()
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds // 60) % 60)
+    pretty_time = f"{hours} h, {minutes} m"
+    return pretty_time
+
+
+def datetime_from_string(str_datetime: str) -> datetime.datetime:
+    dt = datetime.datetime.strptime(str_datetime, '%Y-%m-%d %H:%M:%S.%f')
+    return dt

@@ -124,8 +124,8 @@ def add_qr_code_record(qr_code: str) -> bool:
         current_data = datetime.datetime.now()
         unique_together_key = f"{current_data.date()}/{qr_code}"
         qr_codes_store.put(
-            unique_together_key, unique_together=unique_together_key, datetime=str(current_data-datetime.timedelta(hours=6)), qr_code=qr_code
-        )
+            unique_together_key, unique_together=unique_together_key, datetime=str(current_data), qr_code=qr_code
+        )  # -datetime.timedelta(hours=6)
         print(f"You're successfully added QR code {qr_code} to {current_data} datetime!")
         return True
     except Exception as e:
