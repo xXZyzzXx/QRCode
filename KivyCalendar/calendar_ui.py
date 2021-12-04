@@ -162,7 +162,8 @@ class CalendarWidget(RelativeLayout):
     def get_btn_value(self, inst):
         """ Get day value from pressed button """
         self.active_date[0] = int(inst.text)
-
+        if hasattr(inst, "weekday"):
+            return
         current_datetime = convert_active_time_to_datetime(self.active_date)
         date_now = current_datetime.strftime('%d %B %Y')
         current_date = current_datetime.date()
@@ -291,4 +292,6 @@ class DayNumButton(DayButton):
 
 
 class DayNumWeekendButton(DayButton):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.weekday = True

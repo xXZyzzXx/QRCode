@@ -59,8 +59,8 @@ class RegisterNewPupilButton(Button):
 
     def save_pupil_data_to_database(self, data: dict) -> None:
         name = data.get("name")
-        first_name = data.get("first_name")
-        phone_number = data.get("phone_number")
+        first_name = data.get("first name")
+        phone_number = data.get("phone number")
         create_result = create_new_pupil(name=name, first_name=first_name, phone_number=phone_number)
         if not create_result:
             self.show_fail_message(extra_message="Save pupils to database error !")
