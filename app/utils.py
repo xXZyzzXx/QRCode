@@ -18,7 +18,7 @@ def get_screen_dimensions(debug: bool = False) -> tuple:
     """
     Returns current dimensions
     """
-    scale_modifier = 2
+    scale_modifier = 1.5
     if not debug:
         return DEFAULT_WIDTH, DEFAULT_HEIGHT
     return DEFAULT_WIDTH / scale_modifier, DEFAULT_HEIGHT / scale_modifier
@@ -89,9 +89,11 @@ def convert_active_time_to_datetime(date_list: list) -> datetime.datetime:
 
 def format_timedelta(delta: datetime.timedelta) -> str:
     total_seconds = delta.total_seconds()
-    hours = int(total_seconds // 3600)
-    minutes = int((total_seconds // 60) % 60)
-    pretty_time = f"{hours} h, {minutes} m"
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    pretty_time = f"{int(minutes)} m, {f'0{int(seconds)}' if int(seconds) < 10 else int(seconds)}s"
+    if hours:
+        pretty_time = f"{int(hours)} h, {pretty_time}"
     return pretty_time
 
 
