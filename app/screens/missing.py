@@ -32,7 +32,7 @@ class MissingDevicesScreen(Screen):
         root = build_screen(screen_name=self.name, body=body)
         self.add_widget(root)
 
-    def on_leave(self, *args):  # TODO: add to all screens
+    def on_leave(self, *args):
         self.clear_widgets()
         self.schedule_event.cancel()
 

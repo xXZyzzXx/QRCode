@@ -21,18 +21,19 @@ class RegisterScreen(Screen):
     def on_enter(self, *args):
         self.text_input_lines = []  # Refresh initial data
         body = BoxLayout()
-        # Creating register menu
-        body.add_widget(self.build_register_menu())
-        # Building all parts together
-        root = build_screen(screen_name=self.name, body=body)
+        body.add_widget(self.build_register_menu())  # Creating register menu
+        root = build_screen(screen_name=self.name, body=body)  # Building all parts together
         self.add_widget(root)
+
+    def on_leave(self, *args):
+        self.clear_widgets()
 
     def build_register_menu(self) -> AnchorLayout:
         root = AnchorLayout(anchor_x="center", anchor_y="top")
 
         notifications_lay = BoxLayout(orientation="vertical", height=50)
         notification_label = Label()
-        notifications_lay.add_widget(notification_label)  # Button(text="notifications")
+        notifications_lay.add_widget(notification_label)
 
         box_lay = BoxLayout(orientation="vertical", size_hint=(0.7, 0.8), padding=(0, 0, 0, 50))
         box_lay.add_widget(notifications_lay)

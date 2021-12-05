@@ -48,6 +48,9 @@ class AssignQRCodeScreen(Screen):
         self.assign_qr_manager.qr_code_data = None
         self.assign_qr_manager.set_default_screen()
 
+    def on_leave(self, *args):
+        self.clear_widgets()
+
 
 # Additional widgets
 class AssignScreenManager(ScreenManager):

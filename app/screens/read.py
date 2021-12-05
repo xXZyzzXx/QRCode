@@ -10,9 +10,15 @@ from app.database import add_qr_code_record
 
 
 class ReadQRCodeScreen(Screen):
+    """
+    Reading QR code data and add
+    """
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.qr_code_input = None
+
     def on_enter(self, *args):
         body = BoxLayout()
-        # TODO: Custom logic, just in progress
         body.add_widget(self.build_test_qr_code_screen())
         """
         try:
@@ -23,7 +29,11 @@ class ReadQRCodeScreen(Screen):
         root = build_screen(screen_name=self.name, body=body)
         self.add_widget(root)
 
+    def on_leave(self, *args):
+        self.clear_widgets()
+
     def build_test_qr_code_screen(self) -> AnchorLayout:
+        """Building read qr code menu skeleton"""
         root = AnchorLayout(anchor_x="center", anchor_y="center")
         box_lay = BoxLayout(orientation="vertical", size_hint=(.6, .2))
         read_qr_btn = Button(text="Add QR code datetime record", size_hint=(1, .5))
@@ -37,5 +47,6 @@ class ReadQRCodeScreen(Screen):
         return root
 
     def test_get_qr_code_data(self):
+        """Temporary method for emulate qr-code answer"""
         qr_code = self.qr_code_input.text
         add_qr_code_record(qr_code=qr_code)
