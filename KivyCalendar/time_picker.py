@@ -1,6 +1,6 @@
 from kivy.animation import Animation
 from kivy.clock import Clock
-from kivy.garden.circularlayout import CircularLayout
+from KivyCalendar.circularlayout import CircularLayout
 # from kivy.garden.recycleview import RecycleView
 from kivy.graphics import Line, Color, Ellipse
 from kivy.lang import Builder
