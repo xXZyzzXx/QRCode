@@ -6,9 +6,9 @@ from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
-# from kivy_garden.zbarcam import ZBarCam
 
 from app.utils import build_screen
+from app.custom_widgets import CameraScreen
 from app.database import get_all_pupils, add_qr_code_data_to_pupil_by_name
 
 
@@ -28,6 +28,7 @@ class AssignQRCodeScreen(Screen):
     """
     Root screen to manage assign logic with sub-menus
     """
+
     def __init__(self, **kw):
         super().__init__(**kw)
         self.assign_qr_manager = AssignScreenManager()
@@ -57,12 +58,13 @@ class AssignScreenManager(ScreenManager):
     """
     Custom screen manager for navigation between assign menu
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.transition = NoTransition()
         self.qr_code_data = None
 
-    def change_screen_to_assign(self, qr_code_data: dict) -> None:
+    def change_to_process_qr_code_screen(self, qr_code_data: str) -> None:
         self.qr_code_data = qr_code_data
         self.change_to_screen(screen_name=AssignScreenNames.ASSIGN)
 
@@ -79,6 +81,7 @@ class StartScreen(Screen):
     """
     Default menu to start assign QR or get back
     """
+
     def __init__(self, **kw):
         super().__init__(**kw)
 
@@ -95,26 +98,32 @@ class StartScreen(Screen):
         return root
 
 
-class ReadQRScreen(Screen):
+class ReadQRScreen(CameraScreen):
     """
     Reading QR data and pass to next screen
     """
+
     def __init__(self, **kw):
         super().__init__(**kw)
 
     def on_enter(self, *args):
-        self.skip_reading_qr_for_test()
+        # self.skip_reading_qr_for_test()
+        super(ReadQRScreen, self).on_enter(*args)
 
     def skip_reading_qr_for_test(self) -> None:
         # Temporary for testing (qr code read emulating)
         qr_code_data = {"qr_code": "47389d389d2y3733yh4393"}
-        self.manager.change_screen_to_assign(qr_code_data=qr_code_data)
+        self.manager.change_to_process_qr_code_screen(qr_code_data=qr_code_data)
+
+    def change_to_process_qr_code_screen(self, qr_code_data: str) -> None:
+        self.manager.change_to_process_qr_code_screen(qr_code_data)
 
 
 class AssignToPupilScreen(Screen):
     """
     Choosing pupils to assign a QR code
     """
+
     def __init__(self, **kw):
         super().__init__(**kw)
         self.qr_code_data = None
@@ -144,7 +153,7 @@ class AssignToPupilScreen(Screen):
 
     def set_assign_choice(self, pupil_name: str, accept: bool = False) -> None:
         if accept:
-            qr_code = self.qr_code_data.get("qr_code")
+            qr_code = self.qr_code_data
             add_qr_code_data_to_pupil_by_name(qr_code_data=qr_code, pupil_name=pupil_name)
             self.manager.set_default_screen()
 
@@ -154,6 +163,7 @@ class AssignQRCodeButton(Button):
     """
     Custom button to open confirmation popup to assign qr data to pupil
     """
+
     def __init__(self, pupil_data: dict, screen: Screen, **kwargs):
         super().__init__(**kwargs)
         self.pupil_data = pupil_data
