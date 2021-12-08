@@ -1,9 +1,9 @@
-from datetime import date, datetime
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
+from kivy_garden.zbarcam import ZBarCam
 
 from app.utils import build_screen
 from app.database import add_qr_code_record
@@ -18,14 +18,15 @@ class ReadQRCodeScreen(Screen):
         self.qr_code_input = None
 
     def on_enter(self, *args):
-        body = BoxLayout()
+        body = BoxLayout(orientation='vertical')
         body.add_widget(self.build_test_qr_code_screen())
-        """
+
         try:
-            root.add_widget(ZBarCam())
+            body.add_widget(ZBarCam())
         except Exception as e:
-            print(f"Add ZBarCam widget error")
-        """
+            import traceback
+            print(f"Add ZBarCam widget error: {e}, ")  # {traceback.format_exc()}
+
         root = build_screen(screen_name=self.name, body=body)
         self.add_widget(root)
 

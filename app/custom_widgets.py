@@ -79,6 +79,3 @@ class RegisterNewPupilButton(Button):
     def notification_remove_callback(self, dt: float) -> None:
         """Remove notification after showing"""
         self.notification_label.text = ""
-
-
-

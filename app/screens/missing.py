@@ -34,7 +34,8 @@ class MissingDevicesScreen(Screen):
 
     def on_leave(self, *args):
         self.clear_widgets()
-        self.schedule_event.cancel()
+        if self.schedule_event:
+            self.schedule_event.cancel()
 
     def build_missing_devices_menu(self) -> AnchorLayout:
         self.date_today = datetime.datetime.now()
