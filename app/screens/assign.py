@@ -31,10 +31,10 @@ class AssignQRCodeScreen(Screen):
 
     def __init__(self, **kw):
         super().__init__(**kw)
-        self.assign_qr_manager = AssignScreenManager()
-        self.build_assign_screen()
+        self.assign_qr_manager = None
 
     def build_assign_screen(self) -> None:
+        self.assign_qr_manager = AssignScreenManager()
         self.assign_qr_manager.qr_code_data = None
         body = BoxLayout()
         self.assign_qr_manager.add_widget(StartScreen(name=AssignScreenNames.START))
@@ -46,10 +46,13 @@ class AssignQRCodeScreen(Screen):
         self.add_widget(root)
 
     def on_enter(self, *args):
+        self.build_assign_screen()
         self.assign_qr_manager.qr_code_data = None
         self.assign_qr_manager.set_default_screen()
 
     def on_leave(self, *args):
+        for screen in self.assign_qr_manager.screens:
+            screen.on_leave()
         self.clear_widgets()
 
 

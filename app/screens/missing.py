@@ -40,7 +40,6 @@ class MissingDevicesScreen(Screen):
     def build_missing_devices_menu(self) -> AnchorLayout:
         self.date_today = datetime.datetime.now()
         self.day_info = get_day_info_by_date(date=self.date_today.date())
-        print(f"day_info: {self.day_info}")
         anchor_lay = AnchorLayout(anchor_x="center", anchor_y="center")
 
         if self.day_info:
@@ -55,11 +54,6 @@ class MissingDevicesScreen(Screen):
 
             all_pupils = get_all_pupils()
             self.sort_pupils(all_pupils)
-            print(
-                f"pupils_who_pass_phone_list: {self.pupils_who_pass_phone_list}\n\n"
-                f"pupils_who_late_list: {self.pupils_who_late_list}\n\n"
-                f"pupils_who_did_not_pass_phone_list: {self.pupils_who_did_not_pass_phone_list}"
-            )
             self.display_pupils_list_on_grid(grid_lay=grid_lay)
             scroll_lay.add_widget(grid_lay)
             box_lay.add_widget(scroll_lay)
@@ -107,7 +101,6 @@ class MissingDevicesScreen(Screen):
                 date_difference = active_day_datetime - datetime_moment
 
             data_to_save = {"name": pupil_name, "late": is_late, "date_diff": date_difference}
-            print(f"datetime_moment: {datetime_moment}, {active_day_datetime}, date_difference: {date_difference}")
             if qr_code_record:
                 if is_late:
                     self.pupils_who_late_list.append(data_to_save)
@@ -134,7 +127,6 @@ class MissingDevicesScreen(Screen):
                 if late:
                     text_color = (1, 0, 0, 1)
                 time_diff_label = TimeDiffLabel(size_hint_x=.25, color=text_color)
-                print(f"date_diff: {date_diff}")
                 time_diff_label.change_label_text(delta_time=date_diff)
                 data_list_item.add_widget(time_diff_label)
                 total_lay_height += default_item_height
@@ -171,7 +163,10 @@ class TimeDiffLabel(Label):
 
     def change_label_text(self, delta_time: datetime.timedelta):
         self.current_delta = delta_time
-        self.text = format_timedelta(delta=delta_time)
+        if delta_time >= datetime.timedelta(hours=8):
+            self.text = ">8 hours"
+        else:
+            self.text = format_timedelta(delta=delta_time)
 
 
 class GridBoxLayout(BoxLayout):

@@ -88,13 +88,14 @@ class RegisterNewPupilButton(Button):
 class CameraScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.img = Image()  # Image widget to display frames
+        self.img = None
         self.camera = None
         self.update_event = None
         self.need_update = True
 
     def setup_camera(self):
         """Setup OpenCV camera resolution"""
+        self.img = Image()  # Image widget to display frames
         self.camera = cv2.VideoCapture(0)  # start OpenCV camera
         self.camera.set(3, 640)  # set resolution of camera
         self.camera.set(4, 640)
@@ -110,12 +111,14 @@ class CameraScreen(Screen):
         self.add_widget(root)
 
     def on_leave(self, *args):
-        self.clear_widgets()
         if self.update_event:
             self.update_event.cancel()
+        if self.camera:
+            self.camera.release()
         self.need_update = False
+        self.img = None
+        self.clear_widgets()
         cv2.destroyAllWindows()
-        self.camera = None
 
     def build_camera_screen(self):
         """Create screen layout"""
@@ -144,6 +147,7 @@ class CameraScreen(Screen):
                     cv2.putText(frame, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
                     if barcode_data:
                         self.need_update = False
+                        self.camera.release()
                         print(f"change screen")
                         self.change_screen(barcode=barcode_data)
                         if self.update_event:
